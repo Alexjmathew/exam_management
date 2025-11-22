@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}Student Dashboard - Exam Management{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-user"></i> My Profile
+                </h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Name:</strong> {{ session.user.name }}</p>
+                <p><strong>Student ID:</strong> {{ student.student_id }}</p>
+                <p><strong>Branch:</strong> {{ student.branch }}</p>
+                <p><strong>Semester:</strong> {{ student.semester }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-ticket-alt"></i> My Hall Tickets
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if hall_tickets %}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Exam</th>
+                                <th>Date</th>
+                                <th>Room</th>
+                                <th>Seat</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for ticket in hall_tickets %}
+                            <tr>
+                                <td>{{ ticket.exam_name }}</td>
+                                <td>{{ ticket.date }}</td>
+                                <td>{{ ticket.room }}</td>
+                                <td>Row {{ ticket.row }}, Seat {{ ticket.seat }}</td>
+                                <td>
+                                    <a href="{{ url_for('download_hall_ticket', exam_id=ticket.exam_id) }}" 
+                                       class="btn btn-sm btn-primary">
+                                        <i class="fas fa-download"></i> Download
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-muted">No hall tickets available.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-calendar-alt"></i> Upcoming Exams
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if exams %}
+                <div class="list-group">
+                    {% for exam in exams %}
+                    <div class="list-group-item">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">{{ exam.name }}</h6>
+                            <small>{{ exam.date }}</small>
+                        </div>
+                        <p class="mb-1">Time: {{ exam.time }}</p>
+                        <small class="text-muted">Subjects: {{ exam.subjects|join(', ') }}</small>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-muted">No upcoming exams.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
