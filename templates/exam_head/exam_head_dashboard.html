@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block title %}Exam Head Dashboard - Exam Management{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2>Exam Head Dashboard</h2>
+            <a href="{{ url_for('create_exam') }}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Create New Exam
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-exclamation-triangle"></i> Pending Malpractice Reports
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if malpractice_reports %}
+                <div class="list-group">
+                    {% for report in malpractice_reports %}
+                    <div class="list-group-item">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">Student: {{ report.student_id }}</h6>
+                            <span class="badge bg-{{ 'danger' if report.severity == 'high' else 'warning' }}">
+                                {{ report.severity }}
+                            </span>
+                        </div>
+                        <p class="mb-1">{{ report.description }}</p>
+                        <small class="text-muted">Reported at: {{ report.reported_at }}</small>
+                        <div class="mt-2">
+                            <button class="btn btn-sm btn-success">Approve</button>
+                            <button class="btn btn-sm btn-danger">Reject</button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-muted">No pending malpractice reports.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-list"></i> Active Exams
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if exams %}
+                <div class="list-group">
+                    {% for exam in exams %}
+                    <div class="list-group-item">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">{{ exam.name }}</h6>
+                            <span class="badge bg-{{ 'success' if exam.status == 'active' else 'secondary' }}">
+                                {{ exam.status }}
+                            </span>
+                        </div>
+                        <p class="mb-1">Date: {{ exam.date }} | Time: {{ exam.time }}</p>
+                        <small class="text-muted">Seats: {{ exam.total_seats }}</small>
+                        <div class="mt-2">
+                            <a href="{{ url_for('live_monitoring') }}" class="btn btn-sm btn-info">
+                                <i class="fas fa-eye"></i> Monitor
+                            </a>
+                            <a href="{{ url_for('classroom_builder') }}" class="btn btn-sm btn-warning">
+                                <i class="fas fa-cog"></i> Manage
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-muted">No active exams.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-tachometer-alt"></i> Quick Actions
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-md-3 mb-3">
+                        <a href="{{ url_for('create_exam') }}" class="btn btn-outline-primary btn-lg w-100">
+                            <i class="fas fa-plus fa-2x mb-2"></i><br>
+                            Create Exam
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="{{ url_for('classroom_builder') }}" class="btn btn-outline-success btn-lg w-100">
+                            <i class="fas fa-building fa-2x mb-2"></i><br>
+                            Manage Classrooms
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="{{ url_for('live_monitoring') }}" class="btn btn-outline-info btn-lg w-100">
+                            <i class="fas fa-desktop fa-2x mb-2"></i><br>
+                            Live Monitoring
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="#" class="btn btn-outline-warning btn-lg w-100">
+                            <i class="fas fa-file-pdf fa-2x mb-2"></i><br>
+                            Generate Reports
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
